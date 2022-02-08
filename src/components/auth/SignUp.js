@@ -1,60 +1,111 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button, Col, Container, Form, Row } from 'react-bootstrap'
 import Base from '../Base'
+import { saveUsers } from '../CartService'
 
 function SignUp() {
-    return (
-        <Base>
-         <Container>
-      <Row>
-        <Col md={{ span: 6, offset: 3 }}>
-          {/* {loading} */}
-          <Form>
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label>First Name</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter First Name"
-                // onChange={handleFirstName}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label>Last Name</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter lastname"
-                // onChange={handleLastName}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label>Email address</Form.Label>
-              <Form.Control
-                type="email"
-                placeholder="Enter email"
-                // onChange={handleEmail}
-              />
-            </Form.Group>
+  const [users, setUsers] = useState({
+    "firstName": "",
+    "lastName": "",
+    "email": "",
+    "password": ""
 
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Password"
-                // onChange={handlePassword}
-              />
-            </Form.Group>
 
-            <Button variant="primary" type="button"
-            //  onClick={handleClick}
-            >
-              Submit
+  })
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+  const handleFirstName = (e) => {
+    const firstName = e.target.value;
+    setUsers({ ...users, "firstName": firstName })
+
+  }
+  const handleLastName = (e) => {
+    const lastName = e.target.value;
+    setUsers({ ...users, "lastName": lastName })
+
+  }
+  const handleEmail = (e) => {
+    const email = e.target.value;
+    setUsers({ ...users, "email": email })
+
+  }
+  const handlePassword = (e) => {
+    const password = e.target.value;
+    setUsers({
+      ...users, "password": password
+    })
+
+  }
+
+  const handleClick = () => {
+    setMessage("")
+    saveUsers(users).then(data => {
+      if (data.statusCode === 200) {
+        setMessage(data.message)
+
+      } else {
+        setError(data.errors)
+      }
+    }).catch(err => {
+      console.log(err)
+    })
+  }
+
+  return (
+    <Base>
+      <Container>
+        <Row>
+          <Col md={{ span: 6, offset: 3 }}>
+            {/* {loading} */}
+            {message && < p > {message}</p>}
+            {error && < p > {error}</p>}
+            <Form>
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Label>First Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter First Name"
+
+                  onChange={handleFirstName}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Label>Last Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter lastname"
+                  onChange={handleLastName}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Label>Email address</Form.Label>
+                <Form.Control
+                  type="email"
+                  placeholder="Enter email"
+                  onChange={handleEmail}
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3" controlId="formBasicPassword">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="Password"
+                  onChange={handlePassword}
+                />
+              </Form.Group>
+
+              <Button variant="primary" type="button"
+                onClick={handleClick}
+              >
+                Submit
             </Button>
-          </Form>
-        </Col>
-      </Row>
-    </Container>
-        </Base>
-    )
+            </Form>
+          </Col>
+        </Row>
+      </Container>
+    </Base >
+  )
 }
 
 export default SignUp
