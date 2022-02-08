@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Col, Container, Form, Row } from 'react-bootstrap'
+import { Button, Col, Container, Form, Row,Alert } from 'react-bootstrap'
 import Base from '../Base'
 import { saveUsers } from '../CartService'
 
@@ -39,6 +39,7 @@ function SignUp() {
 
   const handleClick = () => {
     setMessage("")
+    setError("")
     saveUsers(users).then(data => {
       if (data.statusCode === 200) {
         setMessage(data.message)
@@ -57,8 +58,8 @@ function SignUp() {
         <Row>
           <Col md={{ span: 6, offset: 3 }}>
             {/* {loading} */}
-            {message && < p > {message}</p>}
-            {error && < p > {error}</p>}
+            {message && <Alert variant='success'> {message}</Alert>}
+            {error && <Alert variant="danger"> {error}</Alert>}
             <Form>
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>First Name</Form.Label>
