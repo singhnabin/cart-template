@@ -25,3 +25,11 @@ export const loginUser= (user) => {
         console.log(err)
     })
 }
+
+export const authenticate=()=>{
+    if(typeof window ==="undefined") return false;
+    if(localStorage.getItem("userInfo")){
+        return JSON.parse(localStorage.getItem("userInfo"));
+    }
+    return false;
+}

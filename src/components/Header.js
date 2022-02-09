@@ -1,7 +1,12 @@
 import React from "react";
 import { Nav, Navbar, NavDropdown } from "react-bootstrap";
+import { authenticate } from "./CartService";
+import PeopleIcon from '@mui/icons-material/People';
+
 
 function Header() {
+  const isAuthenticated= authenticate();
+  console.log(isAuthenticated)
   return (
     <div>
       <Navbar
@@ -21,16 +26,20 @@ function Header() {
 
             <Nav.Link href="/about">About Us</Nav.Link>
             <Nav.Link href="/admin">Admin</Nav.Link>
-            {/* {/* {!isLoggedIn && ( */}
-              <>
+            {!isAuthenticated &&
+             <>
                 <Nav.Link href="/signup">Sign Up</Nav.Link>
 
                 <Nav.Link href="/login">Login</Nav.Link>
-              </>
-            {/* // )} */} 
+              </>}
+            
+         
+             
+         
             <NavDropdown title="Product" id="collasible-nav-dropdown">
               <NavDropdown.Item href="/product/all">Show All Product</NavDropdown.Item>
-              <NavDropdown.Item href="/product/create">Create Product</NavDropdown.Item>
+              {isAuthenticated&& <NavDropdown.Item href="/product/create">Create Product</NavDropdown.Item>}
+             
               
             </NavDropdown>
 
@@ -48,7 +57,16 @@ function Header() {
       </Nav.Link>
                         </Nav> */}
         </Navbar.Collapse>
+        {isAuthenticated&&
+        <div className='nav-custom-icon' style={{color:'#fff',display:"flex", justifyContent:"center",marginTop:'10px'}}>
+        <PeopleIcon/>
+        <p style={{marginLeft:"4px",marginRight:"10px"}}>
+        {isAuthenticated.user}
+        </p>
+        </div> 
+        }
       </Navbar>
+
     </div>
   );
 }

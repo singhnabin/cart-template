@@ -28,7 +28,11 @@ function Login() {
   const handleClick=()=>{
     loginUser(users).then(data=>{
       if(data.statusCode === 200){
-        setDoRedirect(true)
+        console.log(data)
+        if(typeof window !== "undefined"){
+          localStorage.setItem("userInfo",JSON.stringify(data.data))
+          setDoRedirect(true);
+        }
       }
       else{
 setError(data.errors)
@@ -68,7 +72,7 @@ setError(data.errors)
                   />
                 </Form.Group>
 
-                <Button variant="secondary" type="button"
+                <Button variant="primary" type="button"
                   onClick={handleClick}
                 >
                   Submit
