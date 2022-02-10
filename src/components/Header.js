@@ -2,11 +2,22 @@ import React from "react";
 import { Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { authenticate } from "./CartService";
 import PeopleIcon from '@mui/icons-material/People';
+import { useHistory } from "react-router";
 
 
 function Header() {
+  const history= useHistory();
   const isAuthenticated= authenticate();
-  console.log(isAuthenticated)
+  
+
+
+  const handleLogOut=()=>{
+    if(typeof window !=="undefined"){
+      localStorage.removeItem('userInfo')
+      history.push("/");
+    }
+
+  }
   return (
     <div>
       <Navbar
@@ -25,7 +36,7 @@ function Header() {
             
 
             <Nav.Link href="/about">About Us</Nav.Link>
-            <Nav.Link href="/admin">Admin</Nav.Link>
+            {isAuthenticated&&<Nav.Link href="/admin">Admin</Nav.Link>}
             {!isAuthenticated &&
              <>
                 <Nav.Link href="/signup">Sign Up</Nav.Link>
@@ -35,10 +46,12 @@ function Header() {
             
          
              
+         {isAuthenticated&&
+         <>
          
             <NavDropdown title="Product" id="collasible-nav-dropdown">
               <NavDropdown.Item href="/product/all">Show All Product</NavDropdown.Item>
-              {isAuthenticated&& <NavDropdown.Item href="/product/create">Create Product</NavDropdown.Item>}
+              <NavDropdown.Item href="/product/create">Create Product</NavDropdown.Item>
              
               
             </NavDropdown>
@@ -47,8 +60,13 @@ function Header() {
               <NavDropdown.Item href="/user">Profile</NavDropdown.Item>
               <NavDropdown.Item href="/cart">Go To Cart</NavDropdown.Item>
               <NavDropdown.Item href="/orders">Order History</NavDropdown.Item>
-              <NavDropdown.Item href="/logout">Logout</NavDropdown.Item>
+              
+              <NavDropdown.Item  onClick={()=>handleLogOut()}>
+              Logout</NavDropdown.Item>
+              
             </NavDropdown>
+            
+            </>}
           </Nav>
           {/* <Nav>
                             <Nav.Link href="#deets">More deets</Nav.Link>
