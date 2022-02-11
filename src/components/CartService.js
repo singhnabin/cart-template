@@ -78,3 +78,19 @@ export const deleteUser= (id) => {
         console.log(err)
     })
 }
+
+export const updateUser= (user,id) => {
+    user.password='nnnn';
+    return fetch(`${url}/${id}`, {
+        headers: { 'Content-Type': 'application/json' },
+        "method": 'PUT',
+        body:JSON.stringify(user)
+        
+
+    }).then(res => {
+        return res.json();
+    }
+    ).catch(err => {
+        console.log(err)
+    })
+}

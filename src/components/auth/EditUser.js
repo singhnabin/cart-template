@@ -2,15 +2,45 @@
 import React,{useEffect, useState} from 'react'
 import { Col, Container, Form, Row,Button } from 'react-bootstrap'
 import Base from '../Base'
-import { getUser } from '../CartService'
-
+import { getUser, updateUser } from '../CartService'
+import { Redirect } from 'react-router-dom';
+import { useHistory } from "react-router";
 function EditUser(props) {
-    const [user,setUser]= useState();
+  const history=useHistory(); 
+ const [doRidirect,setDoRedirect]=useState(false);
+    const [user,setUser]= useState({
+      firstName:"",
+      lastName:"",
+      email:""
+    });
 // console.log(
+  const handleClick=()=>{
+    updateUser(user,props.match.params.id).then(data=>{
+      if(data.statusCode===200){
+        history.push("/admin");
+        
+      }
+    }).catch(err=>{
+      console.log(err)
+    })
+
+
+  }
+  //destructuring 
+  const {firstName,lastName,email}= user;
+
+   const performRedirect=()=>{
+    return <Redirect to='/'></Redirect>
+  }
     useEffect(() => {
         getUser(props.match.params.id).then(data=>{
             if(data.statusCode===200){
-                setUser(data.data)
+                setUser({...user,
+                  firstName:data.data.firstName,
+                  lastName:data.data.lastName,
+                  email:data.data.email
+
+                })
             }
         }).catch(err=>{
             console.log(err)
@@ -22,6 +52,7 @@ function EditUser(props) {
        <Base>
       <Container>
         <Row>
+        {doRidirect&&performRedirect()}
           <Col md={{ span: 6, offset: 3 }}>
             {/* {loading} */}
             {/* {message && <Alert variant='success'> {message}</Alert>}
@@ -33,9 +64,9 @@ function EditUser(props) {
                 <Form.Control
                   type="text"
                   placeholder="Enter First Name"
-                  value={user.firstName}
-
-                //   onChange={handleFirstName}
+                  value={firstName}
+                  
+onChange={(e)=>setUser({...user,firstName:e.target.value})}
                 />
               </Form.Group>
               <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -43,8 +74,8 @@ function EditUser(props) {
                 <Form.Control
                   type="text"
                   placeholder="Enter lastname"
-                  value={user.lastName}
-                //   onChange={handleLastName}
+                  value={lastName}
+                  onChange={(e)=>setUser({...user,lastName:e.target.value})}
                 />
               </Form.Group>
               <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -52,8 +83,8 @@ function EditUser(props) {
                 <Form.Control
                   type="email"
                   placeholder="Enter email"
-                  value={user.email}
-                //   onChange={handleEmail}
+                  value={email}
+                  onChange={(e)=>setUser({...user,email:e.target.value})}
                 />
               </Form.Group>
 
@@ -67,7 +98,7 @@ function EditUser(props) {
               </Form.Group> */}
 
               <Button variant="primary" type="button"
-                // onClick={handleClick}
+                onClick={handleClick}
               >
                 Submit
             </Button>
